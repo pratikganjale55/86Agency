@@ -31,12 +31,10 @@ const userPostData = require("../models/userPostModel");
 
 /**
  * @swagger
- *
  * /posts:
  *   get:
  *     summary:  Retrieve a list of all posts from followed users
  *     description:  Retrieve a list of all posts from followed users
- *
  *     responses:
  *       200:
  *         description:  Successfully get a list of all posts from followed users
@@ -255,6 +253,62 @@ userPost.put("/edit/:id", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ *
+ * /posts/comment/{id}:
+ *   post:
+ *     summary: Add a comment to a post by its ID
+ *     description: Add a comment to a post by its ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the post to add a comment to
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               comment:
+ *                 type: string
+ *                 description: The comment to be added
+ *     responses:
+ *       200:
+ *         description: Comment added successfully
+ *       401:
+ *         description: Unauthorized - Check user authentication
+ *       501:
+ *         description: Server error
+ */
+userPost.post("/comment/:id", async (req, res) => {
+    try {
+      const postId = req.params.id;
+      const { comment } = req.body;
+  
+      if (!postId || !comment) {
+        return res.status(400).send({ message: "Post ID,and comment are required" });
+      }
+  
+      const updatedPost = await userPostData.findByIdAndUpdate(
+        postId,
+        { $push: { comments: { comment } } },
+        { new: true }
+      );
+  
+      if (!updatedPost) {
+        return res.status(404).send({ message: "Post not found" });
+      }
+  
+      return res.status(201).send({ message: "Comment added successfully", updatedPost });
+    } catch (error) {
+      return res.status(500).send({ message: "An error occurred", error });
+    }
+  });
 /**
  * @swagger
  * /posts/delete/{id}:

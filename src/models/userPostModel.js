@@ -21,6 +21,10 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  comments: {
+    type: Array,
+    default: [],
+  }
 });
 
 const userPost = mongoose.model("userPost", postSchema);
