@@ -4,7 +4,7 @@ const Router = require("express");
 const authRoute = Router();
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel.js");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 // Define signup and login database for swagger //
 
 /**
@@ -35,7 +35,7 @@ const jwt = require("jsonwebtoken")
  *
  */
 // signup swagger API //
- 
+
 /**
  * @swagger
  * /auth/signup:
@@ -139,13 +139,13 @@ authRoute.post("/signup", async (req, res) => {
 authRoute.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-  
+
     if (!email || !password) {
       return res.status(422).send({ message: "Fill in all the details" });
     }
 
     const validUser = await userModel.findOne({ email });
-    
+
     if (!validUser) {
       return res.status(401).send({ message: "Invalid credentials" });
     }

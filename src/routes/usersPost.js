@@ -286,29 +286,33 @@ userPost.put("/edit/:id", async (req, res) => {
  *         description: Server error
  */
 userPost.post("/comment/:id", async (req, res) => {
-    try {
-      const postId = req.params.id;
-      const { comment } = req.body;
-  
-      if (!postId || !comment) {
-        return res.status(400).send({ message: "Post ID,and comment are required" });
-      }
-  
-      const updatedPost = await userPostData.findByIdAndUpdate(
-        postId,
-        { $push: { comments: { comment } } },
-        { new: true }
-      );
-  
-      if (!updatedPost) {
-        return res.status(404).send({ message: "Post not found" });
-      }
-  
-      return res.status(201).send({ message: "Comment added successfully", updatedPost });
-    } catch (error) {
-      return res.status(500).send({ message: "An error occurred", error });
+  try {
+    const postId = req.params.id;
+    const { comment } = req.body;
+
+    if (!postId || !comment) {
+      return res
+        .status(400)
+        .send({ message: "Post ID,and comment are required" });
     }
-  });
+
+    const updatedPost = await userPostData.findByIdAndUpdate(
+      postId,
+      { $push: { comments: { comment } } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).send({ message: "Post not found" });
+    }
+
+    return res
+      .status(201)
+      .send({ message: "Comment added successfully", updatedPost });
+  } catch (error) {
+    return res.status(500).send({ message: "An error occurred", error });
+  }
+});
 /**
  * @swagger
  * /posts/delete/{id}:

@@ -54,7 +54,6 @@ processRouter.post("/follow/:userId", async (req, res) => {
   }
 });
 
-
 /**
  * @swagger
  *
@@ -81,28 +80,28 @@ processRouter.post("/follow/:userId", async (req, res) => {
  */
 
 processRouter.post("/Unfollow/:userId", async (req, res) => {
-    try {
-      const userId = req.params.userId;
-      console.log(userId)
-      if (!userId) {
-        return res.status(400).send({ message: "User ID is required" });
-      }
-  
-      const userData = await userDetails.findOneAndUpdate(
-        { _id: userId },
-        { $inc: { follow: -1 } }
-      );
-     
-      if (!userData) {
-        return res.status(404).send({ message: "User not found" });
-      }
-  
-      return res.status(200).send({
-        message: `You have successfully Unfollowed user with ID ${userId}`,
-      });
-    } catch (error) {
-      return res.status(500).send({ message: "An error occurred" });
+  try {
+    const userId = req.params.userId;
+    console.log(userId);
+    if (!userId) {
+      return res.status(400).send({ message: "User ID is required" });
     }
-  });
+
+    const userData = await userDetails.findOneAndUpdate(
+      { _id: userId },
+      { $inc: { follow: -1 } }
+    );
+
+    if (!userData) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    return res.status(200).send({
+      message: `You have successfully Unfollowed user with ID ${userId}`,
+    });
+  } catch (error) {
+    return res.status(500).send({ message: "An error occurred" });
+  }
+});
 
 module.exports = processRouter;
